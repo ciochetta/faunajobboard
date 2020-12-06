@@ -2,6 +2,6 @@ const express = require("express");
 
 const router = express.Router();
 
-//router.user("/candidates", require("./candidates/routes"));
+router.use("/skills", require("./skills/routes"));
 
 module.exports = router;
