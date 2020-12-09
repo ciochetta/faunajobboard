@@ -49,7 +49,7 @@ const updateSkill = async function (requestSkill, reference) {
 	}
 
 	validation = validateSkill(requestSkill);
-
+	_;
 	if (!validation.Valid) {
 		return {
 			Message: validation.Message,
