@@ -6,4 +6,6 @@ router.use("/skills", require("./skills/routes"));
 
 router.use("/companies", require("./companies/routes"));
 
+router.use("/candidates", require("./candidates/routes"));
+
 module.exports = router;

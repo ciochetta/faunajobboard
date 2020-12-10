@@ -1,3 +1,4 @@
+const e = require("express");
 const { client, q } = require("../db");
 
 const listSkills = async function () {
@@ -49,7 +50,7 @@ const updateSkill = async function (requestSkill, reference) {
 	}
 
 	validation = validateSkill(requestSkill);
-	_;
+
 	if (!validation.Valid) {
 		return {
 			Message: validation.Message,
@@ -109,8 +110,40 @@ const formatSkill = function (databaseSkill) {
 	};
 };
 
+const bulkInsertSkills = async function (toInsertArray) {
+	const dbSkills = await listSkills();
+
+	let newSkills = [];
+	let toReturn = [];
+
+	toInsertArray.forEach((skill) => {
+		const thisSkill = dbSkills.find((dbSkill) => {
+			return dbSkill.name.toLowerCase() === skill.name.toLowerCase();
+		});
+
+		if (thisSkill !== undefined) {
+			toReturn.push(thisSkill);
+		} else {
+			newSkills.push(skill.name);
+		}
+	});
+
+	const newSkillsDb = await Promise.all(
+		newSkills.map(
+			async (newSkill) => (await insertSkill({ name: newSkill })).Data
+		)
+	);
+
+	toReturn = toReturn.concat(newSkillsDb);
+
+	return {
+		Data: toReturn,
+	};
+};
+
 module.exports = {
 	listSkills,
 	insertSkill,
 	updateSkill,
+	bulkInsertSkills,
 };
